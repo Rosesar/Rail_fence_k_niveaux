@@ -1,7 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 
-
 def encrypt_rail_fence(text, k):
     """Encrypt the given text using Rail Fence Cipher with k rails."""
     rail = [['' for _ in range(len(text))] for _ in range(k)]
@@ -21,7 +20,7 @@ def encrypt_rail_fence(text, k):
             if c != '':
                 result.append(c)
 
-    visualize_rail(rail, "Modèle de chiffrement en Rail Fence")
+    visualize_rail(rail, "Modèle de chiffrement en Rail Fence", len(text))
     return ''.join(result)
 
 
@@ -55,13 +54,17 @@ def decrypt_rail_fence(cipher, k):
         row += 1 if direction_down else -1
         col += 1
 
-    visualize_rail(rail, "Modèle de déchiffrement en Rail Fence")
+    visualize_rail(rail, "Modèle de déchiffrement en Rail Fence", len(cipher))
     return ''.join(result)
 
 
-def visualize_rail(matrix, title):
-    """Visualizes a rail matrix for encryption or decryption."""
-    fig, ax = plt.subplots(figsize=(10, len(matrix)))
+def visualize_rail(matrix, title, text_length):
+    """Visualizes a rail matrix for encryption or decryption, scaling dynamically."""
+    # Adjust the figure size based on the text length
+    fig_width = max(text_length // 10, 10)  # Minimum width of 10 inches, adjust size as needed
+    fig_height = len(matrix) * 2  # Adjust height to fit the number of rails
+
+    fig, ax = plt.subplots(figsize=(fig_width, fig_height))
     ax.set_title(title)
     ax.axis('off')
 
@@ -70,7 +73,7 @@ def visualize_rail(matrix, title):
             if char != '':
                 ax.text(j, -i, char, fontsize=12, ha='center', va='center',
                         bbox=dict(boxstyle='round,pad=0.3', edgecolor='black', facecolor='lightblue'))
-    
+
     ax.set_xlim(-1, len(matrix[0]))
     ax.set_ylim(-len(matrix), 1)
     plt.gca().invert_yaxis()
@@ -81,7 +84,7 @@ def visualize_rail(matrix, title):
 st.title("Rail Fence avec k niveaux ")
 
 # Input for plaintext or ciphertext
-operation = st.radio("Choisir l\'opération ", ["Chiffrement", "Déchiffrement"])
+operation = st.radio("Choisir l'opération ", ["Chiffrement", "Déchiffrement"])
 k = st.number_input("Entrer le nombre de niveaux  (k):", min_value=2, max_value=100, value=3, step=1)
 
 # File upload section
@@ -94,9 +97,9 @@ if uploaded_file:
     st.text(text)
 else:
     # Fallback to manual input
-    text = st.text_input("Entrer tle texte:", " ")
+    text = st.text_input("Entrer le texte:", " ")
 
-if st.button("Appliquer l\'opération"):
+if st.button("Appliquer l'opération"):
     if operation == "Chiffrement":
         st.subheader("Résultat du chiffrement")
         encrypted_text = encrypt_rail_fence(text, k)
@@ -106,6 +109,6 @@ if st.button("Appliquer l\'opération"):
     elif operation == "Déchiffrement":
         st.subheader("Résultat du déchiffrement")
         decrypted_text = decrypt_rail_fence(text, k)
-        st.write(f"Decrypted Text: **{decrypted_text}**")
+        st.write(f"Le texte déchiffré: **{decrypted_text}**")
         # Provide a download button
         st.download_button("Télécharger le texte déchiffré", data=decrypted_text, file_name="texte_dechiffre.txt", mime="text/plain")
