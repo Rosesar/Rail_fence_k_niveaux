@@ -98,17 +98,32 @@ if uploaded_file:
 else:
     # Fallback to manual input
     text = st.text_input("Entrer le texte:", " ")
+# Input for custom filename
+file_name = st.text_input("Nom du fichier de sortie (sans extension):", value="output_file")
 
 if st.button("Appliquer l'opération"):
-    if operation == "Chiffrement":
-        st.subheader("Résultat du chiffrement")
-        encrypted_text = encrypt_rail_fence(text, k)
-        st.write(f"Le texte chiffré: **{encrypted_text}**")
-        # Provide a download button
-        st.download_button("Télécharger le texte chiffré ", data=encrypted_text, file_name="texte_chiffre.txt", mime="text/plain")
-    elif operation == "Déchiffrement":
-        st.subheader("Résultat du déchiffrement")
-        decrypted_text = decrypt_rail_fence(text, k)
-        st.write(f"Le texte déchiffré: **{decrypted_text}**")
-        # Provide a download button
-        st.download_button("Télécharger le texte déchiffré", data=decrypted_text, file_name="texte_dechiffre.txt", mime="text/plain")
+    if not file_name.strip():
+        st.error("Veuillez entrer un nom de fichier valide !")
+    else:
+        if operation == "Chiffrement":
+            st.subheader("Résultat du chiffrement")
+            encrypted_text = encrypt_rail_fence(text, k)
+            st.write(f"Le texte chiffré: **{encrypted_text}**")
+            # Provide a download button
+            st.download_button(
+                "Télécharger le texte chiffré",
+                data=encrypted_text,
+                file_name=f"{file_name}.txt",
+                mime="text/plain"
+            )
+        elif operation == "Déchiffrement":
+            st.subheader("Résultat du déchiffrement")
+            decrypted_text = decrypt_rail_fence(text, k)
+            st.write(f"Le texte déchiffré: **{decrypted_text}**")
+            # Provide a download button
+            st.download_button(
+                "Télécharger le texte déchiffré",
+                data=decrypted_text,
+                file_name=f"{file_name}.txt",
+                mime="text/plain"
+            )
