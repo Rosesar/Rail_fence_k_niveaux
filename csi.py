@@ -99,7 +99,7 @@ else:
     # Fallback to manual input
     text = st.text_input("Entrer le texte:", " ")
 # Input for custom filename
-file_name = st.text_input("Nom du fichier de sortie (sans extension):", value="fichier")
+file_name = st.text_input("Nom du fichier de sortie (sans extension):", value="")
 
 if st.button("Appliquer l'opération"):
     if not file_name.strip():
